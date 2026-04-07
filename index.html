@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flowtica — Focus Timer for Study & Deep Work | Flowtica Labs</title>
+<meta name="description" content="Flowtica is a distraction-free focus timer for students and professionals. Build daily focus habits, grow a virtual plant, and track your deep work sessions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green-900: #0d2818; --green-800: #1a3d28; --green-700: #255c3a;
+    --green-600: #2d7a4f; --green-500: #3a9e64; --green-400: #4ec47e;
+    --green-300: #7dd9a3; --green-200: #b2e8ca; --green-100: #d4f0e0;
+    --green-50: #eef8f2; --sand: #f5f0e8; --sand-dark: #e8e0d0;
+    --ink: #111a14; --ink-muted: #4a5e52; --white: #ffffff;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--sand); color: var(--ink); overflow-x: hidden; line-height: 1.6; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 16px 5%; background: rgba(245,240,232,0.9); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(42,100,70,0.1); }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo img { height: 36px; width: auto; }
+  .nav-logo span { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--green-700); letter-spacing: 0.08em; }
+  .nav-links { display: flex; align-items: center; gap: 32px; }
+  .nav-links a { font-size: 14px; font-weight: 500; color: var(--ink-muted); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--green-600); }
+  .nav-cta { background: var(--green-800) !important; color: white !important; padding: 10px 22px; border-radius: 100px; font-weight: 600 !important; transition: background 0.2s, transform 0.15s !important; }
+  .nav-cta:hover { background: var(--green-600) !important; transform: translateY(-1px); }
+
+  /* HERO */
+  .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; padding: 120px 5% 80px; gap: 60px; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -200px; right: -200px; width: 700px; height: 700px; background: radial-gradient(circle, rgba(74,196,126,0.1) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--green-100); color: var(--green-800); padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 24px; }
+  .hero-badge::before { content: '●'; color: var(--green-500); font-size: 8px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(40px,5vw,66px); line-height: 1.12; color: var(--green-900); margin-bottom: 24px; letter-spacing: -0.02em; }
+  .hero h1 em { font-style: italic; color: var(--green-600); }
+  .hero-sub { font-size: 18px; color: var(--ink-muted); max-width: 480px; line-height: 1.75; margin-bottom: 40px; font-weight: 300; }
+  .hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .btn-primary { display: inline-flex; align-items: center; gap: 10px; background: var(--green-800); color: white; padding: 16px 28px; border-radius: 100px; font-size: 15px; font-weight: 600; text-decoration: none; transition: background 0.2s, transform 0.15s, box-shadow 0.2s; box-shadow: 0 4px 20px rgba(13,40,24,0.25); }
+  .btn-primary:hover { background: var(--green-700); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(13,40,24,0.3); }
+  .btn-secondary { display: inline-flex; align-items: center; gap: 6px; color: var(--green-700); font-size: 15px; font-weight: 500; text-decoration: none; border-bottom: 2px solid var(--green-300); padding-bottom: 2px; transition: border-color 0.2s, color 0.2s; }
+  .btn-secondary:hover { color: var(--green-600); border-color: var(--green-500); }
+  .hero-stats { display: flex; gap: 36px; margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--sand-dark); }
+  .hero-stat-val { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--green-800); font-weight: 700; }
+  .hero-stat-label { font-size: 12px; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+  .hero-visual { position: relative; display: flex; justify-content: center; align-items: center; }
+  .hero-phone-wrap { position: relative; width: 270px; animation: float 4s ease-in-out infinite; }
+  .hero-phone-wrap img { width: 100%; border-radius: 36px; box-shadow: 0 32px 80px rgba(13,40,24,0.28); }
+  .hero-phone-card { position: absolute; background: white; border-radius: 14px; padding: 12px 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); font-size: 12px; font-weight: 600; }
+  .hero-phone-card.streak { top: 60px; left: -64px; color: var(--green-800); }
+  .hero-phone-card.streak span { font-size: 20px; font-family: 'Playfair Display', serif; display: block; }
+  .hero-phone-card.time { bottom: 110px; right: -56px; color: var(--ink-muted); }
+  .hero-phone-card.time span { font-size: 18px; font-family: 'DM Mono', monospace; color: var(--green-700); display: block; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+
+  /* FEATURED */
+  .featured-section { padding: 0 5% 80px; }
+  .featured-img { width: 100%; border-radius: 24px; box-shadow: 0 16px 60px rgba(13,40,24,0.14); }
+
+  /* SHARED */
+  section { padding: 100px 5%; }
+  .section-label { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--green-500); margin-bottom: 12px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(30px,4vw,50px); line-height: 1.18; color: var(--green-900); margin-bottom: 16px; letter-spacing: -0.02em; }
+  .section-sub { font-size: 17px; color: var(--ink-muted); max-width: 560px; line-height: 1.75; font-weight: 300; }
+
+  /* FEATURES */
+  .features-wrap { padding: 40px 0; }
+  .features-bg { background: var(--green-900); border-radius: 32px; margin: 0 3%; }
+  .features-inner { padding: 80px 5%; }
+  .features-header { text-align: center; margin-bottom: 64px; }
+  .features-header .section-label { color: var(--green-400); }
+  .features-header .section-title { color: var(--white); }
+  .features-header .section-sub { color: rgba(255,255,255,0.55); margin: 0 auto; }
+  .features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: rgba(255,255,255,0.07); border-radius: 20px; overflow: hidden; }
+  .feature-card { background: rgba(255,255,255,0.04); padding: 36px 32px; transition: background 0.2s; }
+  .feature-card:hover { background: rgba(255,255,255,0.08); }
+  .feature-icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(74,196,126,0.15); display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 20px; }
+  .feature-title { font-size: 16px; font-weight: 600; color: white; margin-bottom: 10px; }
+  .feature-desc { font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.7; }
+
+  /* SCREENSHOTS */
+  .screenshots-wrap { padding: 40px 0 100px; }
+  .screenshots-box { background: var(--green-50); border-radius: 32px; margin: 0 3%; padding: 80px 5%; }
+  .screenshots-header { text-align: center; margin-bottom: 64px; }
+  .screenshots-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; align-items: start; }
+  .screenshot-item { text-align: center; }
+  .screenshot-item img { width: 100%; border-radius: 24px; box-shadow: 0 16px 48px rgba(13,40,24,0.13); transition: transform 0.3s; }
+  .screenshot-item:hover img { transform: translateY(-8px); }
+  .screenshot-label { font-size: 13px; font-weight: 600; color: var(--ink-muted); margin-top: 16px; }
+
+  /* SETUP */
+  .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .setup-steps { display: flex; flex-direction: column; gap: 24px; }
+  .step { display: flex; gap: 20px; align-items: flex-start; padding: 24px; border-radius: 16px; border: 1px solid var(--sand-dark); background: white; transition: box-shadow 0.2s, border-color 0.2s; }
+  .step:hover { box-shadow: 0 8px 32px rgba(13,40,24,0.08); border-color: var(--green-200); }
+  .step-num { min-width: 36px; height: 36px; border-radius: 50%; background: var(--green-800); color: white; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 13px; }
+  .step-title { font-size: 16px; font-weight: 600; color: var(--green-900); margin-bottom: 6px; }
+  .step-desc { font-size: 14px; color: var(--ink-muted); line-height: 1.65; }
+  .step-code { font-family: 'DM Mono', monospace; font-size: 12px; background: var(--green-50); border: 1px solid var(--green-100); color: var(--green-800); padding: 8px 12px; border-radius: 8px; margin-top: 10px; display: block; }
+  .setup-visual { background: var(--green-900); border-radius: 24px; padding: 48px 40px; text-align: center; }
+  .setup-visual img { width: 120px; height: 120px; border-radius: 28px; object-fit: cover; margin-bottom: 24px; }
+  .setup-visual h3 { color: white; font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 12px; }
+  .setup-visual p { color: rgba(255,255,255,0.5); font-size: 14px; line-height: 1.75; margin-bottom: 28px; }
+  .setup-visual a { display: inline-flex; align-items: center; gap: 8px; background: var(--green-500); color: white; padding: 14px 28px; border-radius: 100px; font-weight: 600; font-size: 14px; text-decoration: none; transition: background 0.2s; }
+  .setup-visual a:hover { background: var(--green-400); }
+
+  /* ADS.TXT */
+  .ads-wrap { padding: 0 0 100px; }
+  .ads-box { background: white; border-radius: 32px; margin: 0 3%; padding: 64px 5%; }
+  .ads-inner { max-width: 780px; }
+  .ads-code { background: var(--green-900); color: var(--green-300); font-family: 'DM Mono', monospace; font-size: 13px; padding: 24px 28px; border-radius: 16px; margin: 24px 0; line-height: 1.8; word-break: break-all; }
+  .copy-btn { background: var(--green-100); color: var(--green-800); border: none; padding: 10px 22px; border-radius: 100px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s; }
+  .copy-btn:hover { background: var(--green-200); }
+  .ads-note { margin-top: 32px; padding: 24px; background: var(--green-50); border-radius: 16px; border: 1px solid var(--green-100); }
+  .ads-note strong { color: var(--green-900); display: block; margin-bottom: 12px; font-size: 15px; }
+  .ads-note ol { color: var(--ink-muted); font-size: 14px; line-height: 2.2; padding-left: 20px; }
+  .ads-note code { font-family: 'DM Mono', monospace; font-size: 12px; background: white; padding: 1px 6px; border-radius: 4px; }
+
+  /* ABOUT */
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .about-logo-box { background: #0a0a0a; border-radius: 32px; display: flex; align-items: center; justify-content: center; padding: 64px 48px; min-height: 320px; }
+  .about-logo-box img { max-width: 300px; width: 100%; }
+  .about-text p { font-size: 16px; color: var(--ink-muted); line-height: 1.8; margin-bottom: 20px; font-weight: 300; }
+  .about-links { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 32px; }
+  .about-link { font-size: 14px; font-weight: 500; color: var(--green-700); text-decoration: none; border: 1.5px solid var(--green-200); padding: 10px 20px; border-radius: 100px; transition: background 0.2s, border-color 0.2s; }
+  .about-link:hover { background: var(--green-50); border-color: var(--green-400); }
+
+  /* FOOTER */
+  footer { background: var(--green-900); padding: 60px 5% 40px; }
+  .footer-top { display: flex; justify-content: space-between; align-items: center; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.08); flex-wrap: wrap; gap: 24px; }
+  .footer-brand { display: flex; align-items: center; gap: 12px; }
+  .footer-brand img { height: 32px; width: 32px; border-radius: 8px; object-fit: cover; }
+  .footer-brand-name { font-family: 'DM Mono', monospace; font-size: 13px; color: rgba(255,255,255,0.5); }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { font-size: 13px; color: rgba(255,255,255,0.4); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: rgba(255,255,255,0.85); }
+  .footer-copy { font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 24px; }
+
+  /* ANIMATIONS */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s, transform 0.65s; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 960px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-visual { display: none; }
+    .features-grid { grid-template-columns: 1fr 1fr; }
+    .screenshots-grid { grid-template-columns: repeat(2,1fr); }
+    .setup-grid { grid-template-columns: 1fr; }
+    .about-grid { grid-template-columns: 1fr; }
+    .nav-links a:not(.nav-cta) { display: none; }
+  }
+  @media (max-width: 560px) {
+    .features-grid { grid-template-columns: 1fr; }
+    .hero-stats { gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════ NAV ════════
+  images/icon.png = flowtica_appv512x512.png
+-->
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="images/flowticalabs_nobg.png" alt="FlowticaLabs icon">
+    <span>flowtica labs</span>
+  </a>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#screenshots">Screenshots</a>
+    <a href="#about">About</a>
+    <a href="https://play.google.com/store/apps/details?id=com.flowticalabs.flowtica" class="nav-cta">Get the App</a>
+  </div>
+</nav>
+
+<!-- ════════ HERO ════════
+  images/screenshot-timer.png = image4.png
+-->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">Now on Google Play</div>
+    <h1>Focus <em>deeper,</em><br>work smarter,<br>build the habit.</h1>
+    <p class="hero-sub">Flowtica is a distraction-free focus timer for students and professionals. No Pomodoro pressure — just clean sessions, streaks, and a growing plant that rewards your consistency.</p>
+    <div class="hero-actions">
+      <a href="https://play.google.com/store/apps/details?id=com.flowticalabs.flowtica" class="btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.76c.33.19.7.24 1.06.14l12.04-12.04L12.76 8 3.18 23.76zm17.35-10.62c.62-.35.62-1.23 0-1.58l-2.8-1.62-3.17 3.17 3.17 3.17 2.8-1.14zM3 1.1L12.76 16 16.28 12.5 4.24.96A1.25 1.25 0 0 0 3 1.1z"/></svg>
+        Download on Play Store
+      </a>
+      <a href="#features" class="btn-secondary">See all features →</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="hero-stat-val">100%</div><div class="hero-stat-label">Offline</div></div>
+      <div><div class="hero-stat-val">0</div><div class="hero-stat-label">Ads in sessions</div></div>
+      <div><div class="hero-stat-val">9</div><div class="hero-stat-label">Themes</div></div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-phone-wrap">
+      <img src="images/image4.png" alt="Flowtica timer screen">
+      <div class="hero-phone-card streak">🔥 Streak<span>22 days</span></div>
+      <div class="hero-phone-card time">All time<span>103h 13m</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ FEATURED GRAPHIC ════════
+  images/featured-graphic.png = featuredGraphic.png
+-->
+<div class="featured-section reveal">
+  <img src="images/featuredGraphic.png" alt="Flowtica — Focus Timer for Study & Deep Work" class="featured-img">
+</div>
+
+<!-- ════════ FEATURES ════════ -->
+<div class="features-wrap" id="features">
+  <div class="features-bg reveal">
+    <div class="features-inner">
+      <div class="features-header">
+        <div class="section-label">What's inside</div>
+        <h2 class="section-title">Everything you need to<br>build a real focus habit</h2>
+        <p class="section-sub">No fluff. No forced timers. Just the tools that actually help you sit down and do the work.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card"><div class="feature-icon">⏱️</div><div class="feature-title">Your Pace, Your Timer</div><div class="feature-desc">No rigid 25-minute blocks. Set your own session length and study or work exactly how you need to.</div></div>
+        <div class="feature-card"><div class="feature-icon">🌱</div><div class="feature-title">Virtual Plant Growth</div><div class="feature-desc">Every focus session grows your plant from seed to a blooming tree. A visual reminder that your hours add up.</div></div>
+        <div class="feature-card"><div class="feature-icon">🔥</div><div class="feature-title">Daily Streak Tracking</div><div class="feature-desc">Miss a day and your streak breaks. A simple, honest system that quietly keeps you coming back.</div></div>
+        <div class="feature-card"><div class="feature-icon">📊</div><div class="feature-title">Weekly & Monthly Analytics</div><div class="feature-desc">Bar charts, best days, daily averages and all-time totals. See where your focused hours actually go.</div></div>
+        <div class="feature-card"><div class="feature-icon">🏷️</div><div class="feature-title">Session Categories</div><div class="feature-desc">Study, Work, Gym, Personal — track each area of your life separately with custom categories.</div></div>
+        <div class="feature-card"><div class="feature-icon">📴</div><div class="feature-title">Fully Offline</div><div class="feature-desc">No account. No sync. No ads interrupting your sessions. Open the app and start focusing.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ SCREENSHOTS ════════
+  images/screenshot-timer.png    = image4.png
+  images/screenshot-plant.png    = image5.png
+  images/screenshot-analytics.png = image6.png
+  images/screenshot-categories.png = image7.png
+-->
+<div class="screenshots-wrap" id="screenshots">
+  <div class="screenshots-box reveal">
+    <div class="screenshots-header">
+      <div class="section-label">In the app</div>
+      <h2 class="section-title">Clean. Calm. Focused.</h2>
+      <p class="section-sub" style="margin:0 auto;">Designed to disappear — Flowtica stays out of your way so you can do your best work.</p>
+    </div>
+    <div class="screenshots-grid">
+      <div class="screenshot-item"><img src="images/image1.png" alt="Focus Timer"><div class="screenshot-label">Focus Timer</div></div>
+      <div class="screenshot-item"><img src="images/image2.png" alt="Plant Growth"><div class="screenshot-label">Plant Growth</div></div>
+      <div class="screenshot-item"><img src="images/image3.png" alt="Analytics"><div class="screenshot-label">Analytics</div></div>
+      <div class="screenshot-item"><img src="images/image4.png" alt="Categories"><div class="screenshot-label">Categories</div></div>
+    </div>
+  </div>
+</div>
+<!-- ════════ ABOUT ════════
+  images/flowticalabs-logo.png = flowticalabs_nobgv2.png
+-->
+<section id="about">
+  <div class="about-grid reveal">
+    <div class="about-logo-box">
+      <img src="images/flowticalabs_nobg.png" alt="Flowtica Labs logo">
+    </div>
+    <div class="about-text">
+      <div class="section-label">Who we are</div>
+      <h2 class="section-title">Built by Flowtica Labs</h2>
+      <p>Flowtica Labs is an independent mobile app studio building focused, purposeful productivity tools. We believe the best apps stay out of your way — no dark patterns, no engagement traps, no unnecessary complexity.</p>
+      <p>Flowtica is our first app — built from the ground up for students and deep workers who want a simple, honest focus tool that actually helps them get things done.</p>
+      <p style="font-size:14px;color:var(--green-600);font-weight:500;">Made with ☕ and a lot of focus sessions.</p>
+      <div class="about-links">
+        <a href="https://play.google.com/store/apps/details?id=com.flowticalabs.flowtica" class="about-link">Google Play →</a>
+        <a href="mailto:hello@flowticalabs.com" class="about-link">Contact Us</a>
+        <a href="/privacy.html" class="about-link">Privacy Policy</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ FOOTER ════════
+  images/icon.png = flowtica_appv512x512.png
+-->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <img src="images/flowtica_appv512x512.png" alt="Flowtica icon">
+      <span class="footer-brand-name">© 2026 Flowtica Labs. All rights reserved.</span>
+    </div>
+    <div class="footer-links">
+      <a href="https://play.google.com/store/apps/details?id=com.flowticalabs.flowtica">Play Store</a>
+    </div>
+  </div>
+  <div class="footer-copy">Flowtica Labs &amp; </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+</script>
+</body>
+</html>
